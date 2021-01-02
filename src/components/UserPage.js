@@ -1,7 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const UserPage = ({ user, userRepo }) => {
+const UserPage = ({ user, userRepo, search }) => {
+
+    if (search === "") {
+        user = JSON.parse(localStorage.getItem('selected-user'));
+        userRepo = JSON.parse(localStorage.getItem('selected-repo'));
+    }
     return (
         user === "NOT FOUND" ?
             <>
@@ -11,7 +16,6 @@ const UserPage = ({ user, userRepo }) => {
                 <h1>NOT FOUND</h1>
             </> :
             <>
-                {console.log(userRepo)}
                 <Link to="/">
                     <button>HOME</button>
                 </Link>

@@ -4,7 +4,7 @@ import { requestAll, requestRepo, requestUser } from "./services/github_api.js";
 import UserList from "./components/UserList"
 import UserGrid from "./components/UserGrid"
 import UserPage from "./components/UserPage"
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 const App = () => {
 
@@ -38,14 +38,23 @@ const App = () => {
         requestUser(search)
             .then(res => {
                 setUser(res.data)
+                localStorage.setItem("selected-user", JSON.stringify(res.data));
             })
-            .catch(() => setUser("NOT FOUND"))
+            .catch(() => {
+                setUser("NOT FOUND")
+            })
     }, [showUser])
 
     useEffect(() => {
         requestRepo(search)
-            .then(res => setUserRepo(res.data));
-    }, [search])
+            .then(res => {
+                setUserRepo(res.data)
+                localStorage.setItem("selected-repo", JSON.stringify(res.data))
+            })
+            .catch(() => {
+                setUserRepo("NOT FOUND")
+            })
+    }, [showUser])
 
     return (
         <>
@@ -59,22 +68,25 @@ const App = () => {
                 <button onClick={() => {
                     setShowGrid(prev => !prev);
                 }}>DISPLAY</button>
-                <Route exact path="/">
-                    {showGrid ?
-                        <UserGrid
-                            list={list}
-                            repos={repos} /> :
-                        <UserList
-                            list={list}
-                            repos={repos}
-                        />}
-                </Route>
-                <Route path={`/${search}`}>
-                    <UserPage
-                        user={user}
-                        userRepo={userRepo}
-                    />
-                </Route>
+                <Switch>
+                    <Route exact path="/">
+                        {showGrid ?
+                            <UserGrid
+                                list={list}
+                                repos={repos} /> :
+                            <UserList
+                                list={list}
+                                repos={repos}
+                            />}
+                    </Route>
+                    <Route path={`/${search}`}>
+                        <UserPage
+                            user={user}
+                            userRepo={userRepo}
+                            search={search}
+                        />
+                    </Route>
+                </Switch>
             </Router>
         </>
     )

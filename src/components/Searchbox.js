@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const Searchbox = ({ search, setSearch, setShowUser, showUser }) => {
+const Searchbox = ({ search, setSearch, setShowUser }) => {
     return (
         <div>
             <input

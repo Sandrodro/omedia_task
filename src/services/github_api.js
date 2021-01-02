@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const baseurl = "https://api.github.com";
-const auth = "token c9605801548fb802645fbf92f6d79a97524f31df";
+const auth = "token a5d1daa609b7220597e694913a8d50dfb6a56d4c";
 
 export const requestAll = () => {
     return axios({
