@@ -1,9 +1,9 @@
 import axios from "axios";
 
-export const requestAll = () => {
-    const baseurl = "https://api.github.com";
-    const auth = "token 15036c7748a31c48cbe48d87b6bd7579365e55f4";
+const baseurl = "https://api.github.com";
+const auth = "token c9605801548fb802645fbf92f6d79a97524f31df";
 
+export const requestAll = () => {
     return axios({
         method: "GET",
         url: `${baseurl}/search/users`,
@@ -20,18 +20,30 @@ export const requestAll = () => {
 }
 
 export const requestUser = user => {
-    const baseurl = "https://api.github.com";
-    const auth = "token 15036c7748a31c48cbe48d87b6bd7579365e55f4";
-
-    axios({
+    return axios({
         method: "GET",
-        url: `${baseurl}/search/users`,
+        url: `${baseurl}/users/${user}`,
         params: {
             q: user
         },
         headers: {
             accept: "application/vnd.github.v3+json",
             authorization: auth
+        }
+    })
+}
+
+export const requestRepo = user => {
+    return axios({
+        method: "GET",
+        url: `${baseurl}/users/${user}/repos`,
+        headers: {
+            accept: "application/vnd.github.v3+json",
+            authorization: auth
+        },
+        params: {
+            per_page: 3,
+            sort: "updated"
         }
     })
 }

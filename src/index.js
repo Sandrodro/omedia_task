@@ -5,7 +5,7 @@ import { Container } from "react-reflex-grid";
 
 ReactDOM.render(
   <React.StrictMode>
-    <Container>
+    <Container full>
       <App />
     </Container>
   </React.StrictMode>,
