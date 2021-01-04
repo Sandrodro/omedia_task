@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Searchbox from './components/Searchbox';
-import { requestAll, requestRepo, requestUser } from "./services/github_api.js";
+import { requestAll, requestRepo, requestUser, requestOrg } from "./services/github_api.js";
 import UserList from "./components/UserList"
 import UserGrid from "./components/UserGrid"
 import UserPage from "./components/UserPage"
@@ -11,10 +11,12 @@ const App = () => {
     const [search, setSearch] = useState("");
     const [user, setUser] = useState([]);
     const [userRepo, setUserRepo] = useState([]);
+    const [userOrg, setUserOrg] = useState([]);
     const [showUser, setShowUser] = useState(false);
     const [list, setList] = useState([]);
     const [repos, setRepos] = useState([]);
     const [showGrid, setShowGrid] = useState(false);
+    const [searchHistory, setSearchHistory] = useState([]);
 
     useEffect(() => {
         let userList = [];
@@ -56,6 +58,18 @@ const App = () => {
             })
     }, [showUser])
 
+    useEffect(() => {
+        requestOrg(search)
+            .then(res => {
+                setUserOrg(res.data)
+                localStorage.setItem("selected-org", JSON.stringify(res.data))
+                console.log(res.data);
+            })
+            .catch(() => {
+                setUserOrg("NOT FOUND")
+            })
+    }, [showUser])
+
     return (
         <>
             <Router>
@@ -65,11 +79,15 @@ const App = () => {
                     setShowUser={setShowUser}
                     showUser={showUser}
                 />
-                <button onClick={() => {
-                    setShowGrid(prev => !prev);
-                }}>DISPLAY</button>
                 <Switch>
                     <Route exact path="/">
+                        <button onClick={() => {
+                            setShowGrid(prev => !prev)
+                        }}>{showGrid === false ? "GRID VIEW" : "LIST VIEW"}</button>
+                        <div>
+                            Recent Searches: 
+                            
+                        </div>
                         {showGrid ?
                             <UserGrid
                                 list={list}
@@ -84,6 +102,7 @@ const App = () => {
                             user={user}
                             userRepo={userRepo}
                             search={search}
+                            userOrg={userOrg}
                         />
                     </Route>
                 </Switch>

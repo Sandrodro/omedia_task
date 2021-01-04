@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const baseurl = "https://api.github.com";
-const auth = "token a5d1daa609b7220597e694913a8d50dfb6a56d4c";
+const auth = "token 449a11328076fd5566b04ad891f4c9cf9384983f";
 
 export const requestAll = () => {
     return axios({
@@ -44,6 +44,17 @@ export const requestRepo = user => {
         params: {
             per_page: 3,
             sort: "updated"
+        }
+    })
+}
+
+export const requestOrg = user => {
+    return axios({
+        method: "GET",
+        url: `${baseurl}/users/${user}/orgs`,
+        headers: {
+            accept: "application/vnd.github.v3+json",
+            authorization: auth
         }
     })
 }
