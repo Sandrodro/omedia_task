@@ -1,15 +1,21 @@
+//This component renders the Specific user view
+
 import React from "react";
 import { Link } from "react-router-dom";
+//These are components from the reflex-grid library
 import { Row, Col } from "react-reflex-grid";
 
 const UserPage = ({ user, userRepo, search, userOrg }) => {
 
+    //Gets the user info from localstorage, so that the page works with reload
+    //I had to include this IF statement, because on reload, the search state always becomes empty
     if (search === "") {
         user = JSON.parse(localStorage.getItem('selected-user'));
         userRepo = JSON.parse(localStorage.getItem('selected-repo'));
         userOrg = JSON.parse(localStorage.getItem('selected-org'));
     }
     return (
+        // This page displays NOT FOUND if a given info is not found
         user === "NOT FOUND" ?
             <>
                 <Link to="/">

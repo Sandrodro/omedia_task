@@ -18,7 +18,7 @@ body {
     word-wrap: normal;
 }
 
-.gridLogin {
+.gridLogin, .gridRepos {
     word-wrap: break-word;
 }
 
@@ -40,4 +40,10 @@ body {
 .userInfo {
     font-style: italic;
     color: rgb(141, 203, 224)
+}
+
+.history {
+    font-style: italic;
+    color:rgb(27, 107, 107);
+    margin: 0 10px;
 }

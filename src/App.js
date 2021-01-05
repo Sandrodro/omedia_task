@@ -1,23 +1,53 @@
+//The main APP component which holds all state and lifecycle methods
+
 import React, { useEffect, useState } from 'react';
 import Searchbox from './components/Searchbox';
-import { requestAll, requestRepo, requestUser, requestOrg } from "./services/github_api.js";
 import UserList from "./components/UserList"
 import UserGrid from "./components/UserGrid"
 import UserPage from "./components/UserPage"
+import { requestAll, requestRepo, requestUser, requestOrg } from "./services/github_api.js";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 const App = () => {
 
-    const [search, setSearch] = useState("");
-    const [user, setUser] = useState([]);
-    const [userRepo, setUserRepo] = useState([]);
-    const [userOrg, setUserOrg] = useState([]);
-    const [showUser, setShowUser] = useState(false);
-    const [list, setList] = useState([]);
-    const [repos, setRepos] = useState([]);
-    const [showGrid, setShowGrid] = useState(false);
-    const [searchHistory, setSearchHistory] = useState([]);
+    //STATE ------------------------------------------------------------------
 
+    //State that holds what is being curently typed in the searchbar
+    const [search, setSearch] = useState("");
+
+    //State that holds which user are we searching for
+    const [user, setUser] = useState([]);
+
+    //State for the searched user's 3 repos
+    const [userRepo, setUserRepo] = useState([]);
+
+    //State for the searched user's Organisation info
+    const [userOrg, setUserOrg] = useState([]);
+
+    //State that knows whether the information about one specific user is being displayed
+    //It is mainly used as a dependancy in useEffect hooks. Upon changing this state, the information
+    //Regarding the user is loaded in relevant states - user, userRepo and userOrg
+    const [showUser, setShowUser] = useState(false);
+
+    //Loads the Avatar, Login and Type for the most popular users, to be displayed on home page - either
+    //as a list or as a grid
+    const [list, setList] = useState([]);
+
+    //Loads the 3 most recent repos of the most popular users, to be displayed on home page - either 
+    //as a lsit or as a grid
+    const [repos, setRepos] = useState([]);
+
+    //Triggers Grid view or List view
+    const [showGrid, setShowGrid] = useState(false);
+
+    //State responsible for showing the search history
+    const [history, setHistory] = useState([]);
+
+
+    //LIFECYCLE METHODS ---------------------------------------------------
+
+    //loads the Avatar, Login and Type info from Github API using an axios request, that's
+    //defined in a separate file
     useEffect(() => {
         let userList = [];
         requestAll()
@@ -27,6 +57,8 @@ const App = () => {
             });
     }, [])
 
+    //loads the Repository info from Github API using an axios request, that's
+    //defined in a separate file
     useEffect(() => {
         let repoArray = [];
         list.map(item => {
@@ -36,6 +68,8 @@ const App = () => {
         })
     }, [list])
 
+    ////loads the specific user info from Github API using an axios request, that's
+    //defined in a separate file. This info is then displayed on the separate user page
     useEffect(() => {
         requestUser(search)
             .then(res => {
@@ -47,6 +81,8 @@ const App = () => {
             })
     }, [showUser])
 
+    //loads the specific user --repository-- info from Github API using an axios request, that's
+    //defined in a separate file. This info is then displayed on the separate user page
     useEffect(() => {
         requestRepo(search)
             .then(res => {
@@ -58,6 +94,8 @@ const App = () => {
             })
     }, [showUser])
 
+    //loads the specific user --organisation-- info from Github API using an axios request, that's
+    //defined in a separate file. This info is then displayed on the separate user page
     useEffect(() => {
         requestOrg(search)
             .then(res => {
@@ -70,26 +108,47 @@ const App = () => {
             })
     }, [showUser])
 
+
+    //Loads the search history from localStorage, if the information exists there
+    useEffect(() => {
+        let hist = JSON.parse(localStorage.getItem("history"))
+        if (!hist) {
+            setHistory([])
+        } else {
+            setHistory(hist)
+        }
+    }, [])
+
+    //Uploads search terms to localStorage
+    useEffect(() => {
+        localStorage.setItem('history', JSON.stringify(history))
+    }, [history])
+
     return (
         <>
             <Router>
+                {/* The Searchbox component is available in all views of the app */}
                 <Searchbox
                     search={search}
                     setSearch={setSearch}
                     setShowUser={setShowUser}
                     showUser={showUser}
+                    setHistory={setHistory}
                 />
                 <Switch>
                     <Route exact path="/">
                         <button onClick={() => {
                             setShowGrid(prev => !prev)
                         }}>{showGrid === false ? "GRID VIEW" : "LIST VIEW"}</button>
-                        <div>
-                            Recent Searches: 
-                            
-                        </div>
+                        {history.length > 0 ? <div>
+                            Search History:
+                                <span className="history">{history[history.length - 1]}</span>
+                            <span className="history">{history[history.length - 2]}</span>
+                            <span className="history">{history[history.length - 3]}</span>
+                        </div> : null}
                         {showGrid ?
-                            <UserGrid
+                            // List and Grid views
+                            < UserGrid
                                 list={list}
                                 repos={repos} /> :
                             <UserList
@@ -98,6 +157,7 @@ const App = () => {
                             />}
                     </Route>
                     <Route path={`/${search}`}>
+                        {/* User Page view */}
                         <UserPage
                             user={user}
                             userRepo={userRepo}

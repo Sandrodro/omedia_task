@@ -1,8 +1,15 @@
+//This is the file that holds functions for interacting with the GithubApi
+
 import axios from "axios";
 
+//The base url of the app
 const baseurl = "https://api.github.com";
-const auth = "token 449a11328076fd5566b04ad891f4c9cf9384983f";
 
+//Github authorization token, which is loaded from the environment variable
+const auth = `token ${process.env.REACT_APP_GITHUB_TOKEN}`;
+
+
+//This requests the Avatar, login and type info from the api, ordered by followers
 export const requestAll = () => {
     return axios({
         method: "GET",
@@ -19,6 +26,8 @@ export const requestAll = () => {
     })
 }
 
+
+//This requests the Avatar, login and type info from the api for a specific user
 export const requestUser = user => {
     return axios({
         method: "GET",
@@ -33,6 +42,7 @@ export const requestUser = user => {
     })
 }
 
+//Requests Repo info for a given user
 export const requestRepo = user => {
     return axios({
         method: "GET",
@@ -48,6 +58,8 @@ export const requestRepo = user => {
     })
 }
 
+
+//Requests the Organisation info for a specific user
 export const requestOrg = user => {
     return axios({
         method: "GET",

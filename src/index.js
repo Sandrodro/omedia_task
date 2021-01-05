@@ -5,6 +5,7 @@ import { Container } from "react-reflex-grid";
 
 ReactDOM.render(
   <React.StrictMode>
+    {/* The Container of the Reflex-Grid library */}
     <Container>
       <App />
     </Container>

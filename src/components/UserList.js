@@ -1,9 +1,13 @@
+//Component for the List view of the app
+
 import React from "react";
+//These are components from the reflex-grid library
 import { Row, Col } from "react-reflex-grid";
 
 const UserList = ({ list, repos }) => {
     return (
         <>
+            {/* This Row is the index header at the top of the page */}
             <Row justify-center className="index">
                 <Col size={2} className="avatar">
                     Avatar
@@ -18,6 +22,7 @@ const UserList = ({ list, repos }) => {
                     Repositories
             </Col>
             </Row>
+            {/* If the information is available to the state, renders info about the most popular users */}
             {list.length !== 0 && repos.length === 30 && list.map(item => {
                 let userArr = repos.filter(repo => repo[0].owner.login === item.login);
                 return (

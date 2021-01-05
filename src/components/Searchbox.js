@@ -1,7 +1,9 @@
+//The searchbox component
+
 import React from "react";
 import { Link } from "react-router-dom";
 
-const Searchbox = ({ search, setSearch, setShowUser }) => {
+const Searchbox = ({ search, setSearch, setShowUser, setHistory }) => {
     return (
         <nav className="searchBox">
             <input
@@ -15,7 +17,7 @@ const Searchbox = ({ search, setSearch, setShowUser }) => {
                 <button
                     onClick={() => {
                         setShowUser(showUser => !showUser)
-                        localStorage.setItem("last-searches", search)
+                        setHistory(history => [...history, search])
                     }}
                 >SEARCH</button>
             </Link>
