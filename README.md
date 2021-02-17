@@ -1,4 +1,4 @@
-# Omedia Test Project
+# Github Api App
 
 
 # Hello!
